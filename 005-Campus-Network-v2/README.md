@@ -2,6 +2,7 @@
 **Editing v1 (Router-on-a-Stick) Configuration to make L3-Switch SVI Intervlan Routing**
 
 ### Topology in Cisco Packet Tracer
+
 ![Not Found](05-Campus-Network.png)
 
 ### Requirement
@@ -200,8 +201,8 @@
     ```
 2. Branch Campus Router
     ```
-    no int gig0/0.90
-    no int gig0/0.100
+    no ip dhcp pool Staff-Lab-Pool
+    no ip dhcp pool Student-Lab-Pool
     ```
 
 ### Enable Routing in L3 Switch
@@ -346,7 +347,7 @@
     no sh
     ```
 
-### IP to Router Interface
+### Assign IP to Router Interface
 1. Main Campus Router
     ```
     int gig0/0
@@ -361,7 +362,7 @@
     ```
 
 
-### Make L3-----L2 Interface as Trunk
+### Make L3-----L2 Interface Trunk
 1. Main Campus
     - L3-Switch
         ```
@@ -455,6 +456,6 @@
     network 10.10.10.0
     network 10.10.10.12
     ```
-### ~~Configuring Trunk Interfaces in L3-Switch~~
+### ~~Trunk Interfaces in L3-Switch >Router Interface~~
 
 ### ~~Sub-interfaces on Router~~

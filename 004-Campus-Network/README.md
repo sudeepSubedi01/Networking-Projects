@@ -1,6 +1,7 @@
 # Albion University - Campus Network Design
 
 ### Topology in Cisco Packet Tracer
+`Router-on-a-Stick Configuration`
 ![Not found](04-Campus-Network.png)
 
 ### Requirement
