@@ -13,7 +13,7 @@
         - Server Room, 12 devices
 
 ## Requirements
-1. Use hieratical model providing redundancy at every layer i.e. two routers and two multilayer switches are expected to be used to provide redundancy.
+1. Use hierarchical model providing redundancy at every layer i.e. two routers and two multilayer switches are expected to be used to provide redundancy.
 2. The network is also expected to connect to at least two ISPs to provide redundancy and each router to the connected to the two ISPs.
 3. Each department is required to have a wireless network
 4. Each department should be in a different VLAN and in different subnetwork.
@@ -153,7 +153,7 @@
     switchport mode access
     switchport access vlan 30
     ```
-4. **F2-ADMIN**: `
+4. **F2-ADMIN**: 
     ```
     int range fa0/1-2
     switchport mode trunk
@@ -191,12 +191,21 @@
     ```
 
 ### VLAN and Trunk/Access in L3 Switches
+```
+NOTE: 1. Only the interfaces connected to L2-Switches are configured as TRUNK.
+      2. The interfaces connected to Routers are configured as ???????
+```
+
 1. **L3-Switch-1**
     ```
     int range gig1/0/3-8
     switchport mode trunk
     ```
 2. **L3-Switch-2**
+    ```
+    int range gig1/0/3-8
+    switchport mode trunk
+    ```
 
 ### Switchport Security to Finance and Administration Departs
 1. **F2-Finance**
@@ -207,7 +216,97 @@
     switchport port-security mac-address sticky
     switchport port-security violation shutdown 
     ```
-4. Subnetting and IP addressing
+### Subnetting and IP addressing
+Base Network: `172.16.1.0/24` <br>
+1. First Floor
+    | Department  | Network Address | Subnet Mask   | Host Address Range   | Broadcast Address |
+    |-------------|-----------------|---------------|----------------------|-------------------|
+    | Sales&Marketing(120) | 172.16.1.0/25      | 255.255.255.128 | 172.16.1.1–172.16.1.126    | 172.16.1.127  |
+    | HR & Logistics(120)  | 172.16.1.128/25    | 255.255.255.128 | 172.16.1.129–172.16.1.254  | 172.16.1.255  |
+
+2. Second Floor
+    | Department  | Network Address | Subnet Mask   | Host Address Range   | Broadcast Address |
+    |-------------|-----------------|---------------|----------------------|-------------------|
+    | Finance&Accounts     | 172.16.2.0/25     | 255.255.255.128 | 172.16.2.1–172.16.2.126     | 172.16.2.127 |
+    | Admin & PR           | 172.16.2.128/25   | 255.255.255.128 | 172.16.2.129–172.16.2.254   | 172.16.2.255 |
+
+3. Third Floor
+    | Department  | Network Address | Subnet Mask   | Host Address Range   | Broadcast Address |
+    |-------------|-----------------|---------------|----------------------|-------------------|
+    | ICT         | 172.16.3.0/25     | 255.255.255.128 | 172.16.3.1–172.16.3.126     | 172.16.3.127 |
+    | Server Room | 172.16.3.128/28   | 255.255.255.240 | 172.16.3.129–172.16.3.142   | 172.16.3.143 |
+
+4. Between Routers and L3 Switches
+    | Interface  | Network Address | Subnet Mask   | Host Address Range   | Broadcast Address |
+    |------------|-----------------|---------------|----------------------|-------------------|
+    | R1-ML1     | 172.16.3.144/30     | 255.255.255.252 | 172.16.3.145–172.16.3.146   | 172.16.3.147 |
+    | R1-ML2     | 172.16.3.148/30     | 255.255.255.252 | 172.16.3.149–172.16.3.150   | 172.16.3.151 |
+    | R2-ML1     | 172.16.3.152/30     | 255.255.255.252 | 172.16.3.153–172.16.3.154   | 172.16.3.155 |
+    | R2-ML2     | 172.16.3.156/30     | 255.255.255.252 | 172.16.3.157–172.16.3.158   | 172.16.3.159 |
+
+5. Between Routers and ISPs <br>
+    | Interface | Public IP       |
+    |-----------|-----------------|
+    | R1 - ISP1 | 195.136.17.0/30 |
+    | R1 - ISP2 | 195.136.17.4/30 |
+    | R2 - ISP1 | 195.136.17.8/30 |
+    | R2 - ISP2 | 195.136.17.12/30 |
+
+### IP Configuration
+1. MultiLayer Switch 1
+   ```
+   int range gig1/0/1-2
+   no switchport
+   no sh
+
+   int gig1/0/1
+   ip address 172.16.3.145 255.255.255.252
+
+   int gig1/0/2
+   ip address 172.16.3.149 255.255.255.252
+   ``` 
+
+2. MultiLayer Switch 2
+   ```
+   int range gig1/0/1-2
+   no switchport
+   no sh
+
+   int gig1/0/1
+   ip address 172.16.3.153 255.255.255.252
+
+   int gig1/0/2
+   ip address 172.16.3.157 255.255.255.252
+   ``` 
+
+3. Router 1
+   ```
+   int range gig0/1-2
+   no switchport
+   no sh
+
+   int gig0/1
+   ip address 172.16.3.146 255.255.255.252
+
+   int gig0/2
+   ip address 172.16.3.150 255.255.255.252
+   ``` 
+
+4. Router 2
+   ```
+   int range gig0/1-2
+   no switchport
+   no sh
+
+   int gig0/1
+   ip address 172.16.3.154 255.255.255.252
+
+   int gig0/2
+   ip address 172.16.3.158 255.255.255.252
+   ``` 
+
+
+
 5. OSPF on the routers and 13 switches.
 6. Static IP address to serverRoom devices.
 7. DHCP server device configuratiuons.
